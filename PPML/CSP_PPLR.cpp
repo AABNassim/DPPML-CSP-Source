@@ -27,15 +27,12 @@ CSP_PPLR::CSP_PPLR(void) : secretKey(ring), scheme(secretKey, ring, false) {
     }
 
     Ciphertext cipher1;
-
-    //cout << "KE ?" << endl;
     scheme.encrypt(cipher1, mvec1, n, logp, logq);
-    //cout << "GNEU GNEU GNEU ?" << endl;
 
     complex<double> *dvec = scheme.decrypt(secretKey, cipher1);
 
     cout << "FHE decrypt result:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << dvec[i] << ' ';
     }
     cout << " " << endl;
@@ -87,8 +84,6 @@ CSP_PPLR::CSP_PPLR(void) : secretKey(ring), scheme(secretKey, ring, false) {
 
     // Exchange the keys
 
-    //test_key_exchange();
-
     // Next..
     cout << "Tout est bon" << endl;
     //
@@ -111,9 +106,6 @@ CSP_PPLR::CSP_PPLR(void) : secretKey(ring), scheme(secretKey, ring, false) {
         encoded_model[i] = c;
     }
     scheme.encrypt(cipher_model, encoded_model, n, logp, logq);
-
-
-    //Ciphertext yatangakli = refresh_cipher_unsecure(cipher_model);
 
     // Toy Matrix creation
     complex<double> *encoded_gadget_matrix = new complex<double>[n];
@@ -220,7 +212,6 @@ bool CSP_PPLR::read_file(int sock, char* path)
     FILE *f = fopen(path, "wb");
     long filesize;
     if (!read_long(sock, &filesize)) {
-        cout << "lol" << endl;
         return false;
     }
     if (filesize > 0)
@@ -272,7 +263,7 @@ void CSP_PPLR::test_key_exchange() {
         complex<double> *decrypted_cipher1 = scheme.decrypt(secretKey, *test_cipher);
 
         cout << "Decryption test cipher:" << endl;
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < d; ++i) {
             cout << decrypted_cipher1[i] << ' ';
         }
         cout << " " << endl;
@@ -287,7 +278,7 @@ void CSP_PPLR::test_key_exchange() {
             complex<double> *decrypted_mult_cipher = scheme.decrypt(secretKey, *mult_cipher);
 
             cout << "Decryption mult cipher:" << endl;
-            for (int i = 0; i < n; ++i) {
+            for (int i = 0; i < d; ++i) {
                 cout << decrypted_mult_cipher[i] << ' ';
             }
             cout << " " << endl;
@@ -310,7 +301,7 @@ void CSP_PPLR::test_key_exchange() {
         complex<double> *decrypted_left_rot_cipher = scheme.decrypt(secretKey, *left_rot_cipher);
 
         cout << "Decryption rot cipher:" << endl;
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < d; ++i) {
             cout << decrypted_left_rot_cipher[i] << ' ';
         }
         cout << " " << endl;
@@ -332,7 +323,7 @@ void CSP_PPLR::test_key_exchange() {
         complex<double> *decrypted_right_rot_cipher = scheme.decrypt(secretKey, *right_rot_cipher);
 
         cout << "Decryption right rot cipher:" << endl;
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < d; ++i) {
             cout << decrypted_right_rot_cipher[i] << ' ';
         }
         cout << " " << endl;
@@ -367,7 +358,6 @@ DTPKC::Cipher CSP_PPLR::receive_dtpkc_cipher() {
 
 
     cout << buf << endl;
-    cout << "La CHANCLA : " << decrypted_value << endl;
 }
 
 
@@ -502,7 +492,7 @@ void CSP_PPLR::refresh_cipher_unsecure() {
     complex<double> * plain_check = scheme.decrypt(secretKey, *check);
 
     cout << "Small check:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << plain_check[i] << ' ';
     }
     cout << " " << endl;
@@ -534,7 +524,7 @@ void CSP_PPLR::refresh_cipher_old() {
     complex<double> * plaintext = scheme.decrypt(secretKey, *cipher_to_refresh);
 
     cout << "Plaintext value of the cipher to refresh:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << plaintext[i] << ' ';
     }
     cout << " " << endl;
@@ -560,7 +550,7 @@ void CSP_PPLR::refresh_cipher() {
     complex<double> * plaintext = scheme.decrypt(secretKey, *cipher_to_refresh);
 
     cout << "Plaintext value of the cipher to refresh:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << plaintext[i] << ' ';
     }
     cout << " " << endl;
@@ -615,7 +605,7 @@ void CSP_PPLR::debug() {
     complex<double> * plaintext_cipher1 = scheme.decrypt(secretKey, *cipher1);
 
     cout << "Plaintext value of cipher1:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << plaintext_cipher1[i] << ' ';
     }
     cout << " " << endl;
@@ -623,7 +613,7 @@ void CSP_PPLR::debug() {
     complex<double> * plaintext_cipher2 = scheme.decrypt(secretKey, *cipher2);
 
     cout << "Plaintext value of cipher2:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << plaintext_cipher2[i] << ' ';
     }
     cout << " " << endl;
@@ -631,7 +621,7 @@ void CSP_PPLR::debug() {
     complex<double> * prod = scheme.decrypt(secretKey, *product);
 
     cout << "Plaintext value of prod:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << prod[i] << ' ';
     }
     cout << " " << endl;
@@ -639,7 +629,7 @@ void CSP_PPLR::debug() {
     complex<double> * sig = scheme.decrypt(secretKey, *cipher_sig);
 
     cout << "Plaintext value of sig:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << sig[i] << ' ';
     }
     cout << " " << endl;
@@ -647,7 +637,7 @@ void CSP_PPLR::debug() {
     complex<double> * plaintext_sum = scheme.decrypt(secretKey, cipher_sum);
 
     cout << "Plaintext value of add:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << plaintext_sum[i] << ' ';
     }
     cout << " " << endl;
@@ -655,7 +645,7 @@ void CSP_PPLR::debug() {
     complex<double> * plaintext_product = scheme.decrypt(secretKey, cipher_product);
 
     cout << "Plaintext value of mult:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << plaintext_product[i] << ' ';
     }
     cout << " " << endl;
@@ -663,7 +653,7 @@ void CSP_PPLR::debug() {
     complex<double> * plaintext_cst_product = scheme.decrypt(secretKey, cipher_cst_product);
 
     cout << "Plaintext value of cst mult:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << plaintext_cst_product[i] << ' ';
     }
     cout << " " << endl;
@@ -671,7 +661,7 @@ void CSP_PPLR::debug() {
     complex<double> * plaintext_rot = scheme.decrypt(secretKey, cipher_rot);
 
     cout << "Plaintext value of rot:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << plaintext_rot[i] << ' ';
     }
     cout << " " << endl;
@@ -894,7 +884,7 @@ void CSP_PPLR::test_refresh_cipher() {
     complex<double> * plaintext = scheme.decrypt(secretKey, *check_cipher);
 
     cout << "Plaintext value of the check cipher:" << endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < d; ++i) {
         cout << plaintext[i] << ' ';
     }
     cout << " " << endl;
@@ -1001,7 +991,7 @@ Ciphertext CSP_PPLR::pp_sigmoid_deg3(Ciphertext cipher_x) {
     complex<double> *eussou = scheme.decrypt(secretKey, cipher_x);
 
     cout << "Input: ";
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < d; i++) {
         cout << eussou[i] << ", ";
     }
     cout << " " << endl;
@@ -1015,7 +1005,7 @@ Ciphertext CSP_PPLR::pp_sigmoid_deg3(Ciphertext cipher_x) {
 
     eussou = scheme.decrypt(secretKey, cipher_x_cube);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < d; i++) {
         cout << eussou[i] << ", ";
     }
     cout << " " << endl;
@@ -1026,7 +1016,7 @@ Ciphertext CSP_PPLR::pp_sigmoid_deg3(Ciphertext cipher_x) {
 
     eussou = scheme.decrypt(secretKey, cipher_x_cube);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < d; i++) {
         cout << eussou[i] << ", ";
     }
     cout << " " << endl;
@@ -1038,7 +1028,7 @@ Ciphertext CSP_PPLR::pp_sigmoid_deg3(Ciphertext cipher_x) {
     eussou = scheme.decrypt(secretKey, cipher_ax);
     //scheme.encrypt(cipher_ax, eussou, n, logp, logq);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < d; i++) {
         cout << eussou[i] << ", ";
     }
     cout << " " << endl;
@@ -1051,7 +1041,7 @@ Ciphertext CSP_PPLR::pp_sigmoid_deg3(Ciphertext cipher_x) {
 
     eussou = scheme.decrypt(secretKey, cipher_sig);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < d; i++) {
         cout << eussou[i] << ", ";
     }
     cout << " " << endl;
@@ -1062,7 +1052,7 @@ Ciphertext CSP_PPLR::pp_sigmoid_deg3(Ciphertext cipher_x) {
 
     eussou = scheme.decrypt(secretKey, cipher_sig);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < d; i++) {
         cout << eussou[i] << ", ";
     }
     cout << " " << endl;
@@ -1079,7 +1069,7 @@ Ciphertext CSP_PPLR::pp_sigmoid_deg3(Ciphertext cipher_x) {
 
     eussou = scheme.decrypt(secretKey, cipher_result);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < d; i++) {
         cout << eussou[i] << ", ";
     }
     cout << " " << endl;
@@ -1142,7 +1132,7 @@ Ciphertext CSP_PPLR::pp_dot_product(Ciphertext cx, Ciphertext cy) {
     scheme.reScaleByAndEqual(cipher_prod, logp);
 
     complex<double> *decrypted_product = scheme.decrypt(secretKey, cipher_prod);
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < d; i++) {
         cout << decrypted_product[i] << ", ";
     }
     cout << " " << endl;
@@ -1150,7 +1140,7 @@ Ciphertext CSP_PPLR::pp_dot_product(Ciphertext cx, Ciphertext cy) {
     Ciphertext dot_product = sum_slots(cipher_prod, 0, 10);
 
     complex<double> *decrypted_dot_product = scheme.decrypt(secretKey, dot_product);
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < d; i++) {
         cout << decrypted_dot_product[i] << ", ";
     }
     cout << " " << endl;
@@ -1184,7 +1174,7 @@ void CSP_PPLR::test_pp_dot_product(vector<double> x, vector<double> y) {
     Ciphertext cipher_dot_product = pp_dot_product(cx, cy);
 
     complex<double> *decrypted_dot_product = scheme.decrypt(secretKey, cipher_dot_product);
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < d; i++) {
         cout << decrypted_dot_product[i] << ", ";
     }
     cout << " " << endl;

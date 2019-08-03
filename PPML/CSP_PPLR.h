@@ -60,7 +60,7 @@ public:
 
     long logp = 30; ///< Scaling Factor (larger logp will give you more accurate value)
     long logn = 10; ///< number of slot is 1024 (this value should be < logN in "src/Params.h")
-    long logq = 300; ///< Ciphertext modulus (this value should be <= logQ in "scr/Params.h")
+    long logq = 450; ///< Ciphertext modulus (this value should be <= logQ in "scr/Params.h")
     long n = 1 << logn;
     long numThread = 5;
     double alpha = 1;
@@ -96,8 +96,8 @@ public:
     Ciphertext cipher_model;
     //vector<double> sigmoid_coeffs_deg3 = {0.5, 0.15012, -0.0015930078125};
     vector<double> sigmoid_coeffs_deg3 = {0.5, -1.20096, 0.81562};
-    vector<double> sigmoid_coeffs_deg5 = {0.5, 1.53048, -2.3533056, 1.3511295};
-    vector<double> sigmoid_coeffs_deg7 = {0.5, 1.73496, -4.19407, 5.43402, -2.50739};
+    vector<double> sigmoid_coeffs_deg5 = {0.5, -1.53048, 2.3533056, -1.3511295};
+    vector<double> sigmoid_coeffs_deg7 = {0.5, -1.73496, 4.19407, -5.43402, 2.50739};
 
     Ciphertext cipher_gadget_matrix;
 
