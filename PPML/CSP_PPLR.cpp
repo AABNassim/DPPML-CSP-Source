@@ -8,7 +8,7 @@
 CSP_PPLR::CSP_PPLR(void) : secretKey(ring), scheme(secretKey, ring, false) {
 
     // Generate the cryptosystem keys
-    SetNumThreads(2);
+    SetNumThreads(numThread);
 
     //SecretKey secretKey(ring);
     //Scheme scheme(secretKey, ring);
@@ -176,6 +176,7 @@ bool CSP_PPLR::send_file(int sock, char* path)
         }
         while (filesize > 0);
     }
+    fclose(f);
     return true;
 }
 
@@ -236,6 +237,7 @@ bool CSP_PPLR::read_file(int sock, char* path)
         }
         while (filesize > 0);
     }
+    fclose(f);
     return true;
 }
 
@@ -407,10 +409,10 @@ vector<Record*> CSP_PPLR::decrypt_dataset() {
     for (int i = 0; i < nb_training_ciphers; i++) {
         complex<double> *decrypted_training_batch = scheme.decrypt(secretKey, cipher_training_set[i]);
         for (int j = 0; j < nb_rows; j++) {
-            vector<int> values(d);
+            vector<double> values(d);
             for (int k = 0; k < d; k++) {
                 complex<double> val = decrypted_training_batch[j * nb_cols + k];
-                values[k] = (int) round(val.real());
+                values[k] = val.real();
             }
 
             Record* rcd = new Record(i * nb_rows + j, values, 0);
@@ -547,13 +549,13 @@ void CSP_PPLR::refresh_cipher() {
     read_file(new_socket, "cipher_to_refresh.txt");
     Ciphertext* cipher_to_refresh = SerializationUtils::readCiphertext("cipher_to_refresh.txt");
 
-    complex<double> * plaintext = scheme.decrypt(secretKey, *cipher_to_refresh);
+    /*complex<double> * plaintext = scheme.decrypt(secretKey, *cipher_to_refresh);
 
     cout << "Plaintext value of the cipher to refresh:" << endl;
     for (int i = 0; i < d; ++i) {
         cout << plaintext[i] << ' ';
     }
-    cout << " " << endl;
+    cout << " " << endl;*/
 
     /*Ciphertext refreshed_c;
     scheme.encrypt(refreshed_c, plaintext, n, logp, logq);*/
